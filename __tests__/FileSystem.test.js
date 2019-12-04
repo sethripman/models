@@ -1,9 +1,10 @@
 const fs = require('fs').promises;
-const { mkdirp } = require('../lib/FileSystem');
+const { mkdirp, writeJSON } = require('../lib/FileSystem');
 
 jest.mock('fs', () => ({
   promises: {
     mkdir: jest.fn(() => Promise.resolve('my directory')),
+    writeFile: jest.fn(() => Promise.resolve())
   }
 }));
 
@@ -15,6 +16,14 @@ describe('FileSystem functions', () => {
       return mkdirp('my/cool/path/name')
         .then(() => {
           expect(fs.mkdir).toHaveBeenCalledWith('my/cool/path/name', { recursive: true });
+        });
+    });
+
+    it('writes into a file as JSON', () => {
+      return writeJSON('my/cool/path/name', { name: 'test' })
+        .then(() => {
+          expect(fs.writeFile).toHaveBeenCalledWith('my/cool/path/name', 
+            "{\"name\":\"test\"}");
         });
     });
      
