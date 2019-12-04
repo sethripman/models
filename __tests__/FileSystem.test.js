@@ -1,10 +1,11 @@
 const fs = require('fs').promises;
-const { mkdirp, writeJSON } = require('../lib/FileSystem');
+const { mkdirp, writeJSON, readJSON } = require('../lib/FileSystem');
 
 jest.mock('fs', () => ({
   promises: {
     mkdir: jest.fn(() => Promise.resolve('my directory')),
-    writeFile: jest.fn(() => Promise.resolve())
+    writeFile: jest.fn(() => Promise.resolve()),
+    readFile: jest.fn(() => Promise.resolve(JSON.stringify({ name: 'dog' }))),
   }
 }));
 
@@ -17,19 +18,33 @@ describe('FileSystem functions', () => {
         .then(() => {
           expect(fs.mkdir).toHaveBeenCalledWith('my/cool/path/name', { recursive: true });
         });
-    });
+    });  
+  });
+
+  describe('writeJSON function', () => {
 
     it('writes into a file as JSON', () => {
       return writeJSON('my/cool/path/name', { name: 'test' })
         .then(() => {
           expect(fs.writeFile).toHaveBeenCalledWith('my/cool/path/name', 
-            "{\"name\":\"test\"}");
+            '{"name":"test"}');
         });
     });
-     
   });
-});
 
+  describe('readJSON function', () => {
+
+    it('reads a JSON object from a file', () => {
+      return readJSON('my/cool/path/name')
+        .then(dog => {
+          expect(fs.readFile).toHaveBeenCalledWith('my/cool/path/name', 'utf8');
+          expect(dog).toEqual({ name: 'dog' });
+        });
+    });
+  });
+
+
+});
 
 /*
 describe('required fields', () => {
