@@ -1,9 +1,25 @@
-const Validator = require('../lib/Validator');
+const fs = require('fs').promises;
+const { mkdirp } = require('../lib/FileSystem');
 
-describe('Validator', () => {
-  let validator;
+jest.mock('fs', () => ({
+  promises: {
+    mkdir: jest.fn(() => Promise.resolve()),
+  }
+}));
 
-  describe('required fields', () => {
+describe('FileSystem functions', () => {
+
+  describe('mkdirp function', () => {
+    it('makes a directory and all parent directories', () => {
+      expect(fs.mkdir).toHaveBeenCalledWith('/this/is/my/cool/path.js', 'utf8');
+    });
+     
+  });
+});
+
+
+/*
+describe('required fields', () => {
     beforeAll(() => {
       validator = new Validator('age', {
         type: Number,
@@ -76,5 +92,4 @@ describe('Validator', () => {
 
       expect(validator.validate(dog)).toBeNull();
     });
-  });
-});
+  });*/
