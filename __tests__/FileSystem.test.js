@@ -6,10 +6,10 @@ jest.mock('fs', () => ({
     mkdir: jest.fn(() => Promise.resolve('my directory')),
     writeFile: jest.fn(() => Promise.resolve()),
     readFile: jest.fn(() => Promise.resolve(JSON.stringify({ name: 'dog' }))),
-    readdir: jest.fn(() => Promise.resolve(JSON.stringify([
+    readdir: jest.fn(() => Promise.resolve([
       './name',
       './secondname'
-    ]))),
+    ])),
   }
 }));
 
