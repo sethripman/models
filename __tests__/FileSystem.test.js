@@ -3,15 +3,19 @@ const { mkdirp } = require('../lib/FileSystem');
 
 jest.mock('fs', () => ({
   promises: {
-    mkdir: jest.fn(() => Promise.resolve()),
+    mkdir: jest.fn(() => Promise.resolve('my directory')),
   }
 }));
 
 describe('FileSystem functions', () => {
 
   describe('mkdirp function', () => {
+
     it('makes a directory and all parent directories', () => {
-      expect(fs.mkdir).toHaveBeenCalledWith('/this/is/my/cool/path.js', 'utf8');
+      return mkdirp('my/cool/path/name')
+        .then(() => {
+          expect(fs.mkdir).toHaveBeenCalledWith('my/cool/path/name', { recursive: true });
+        });
     });
      
   });
