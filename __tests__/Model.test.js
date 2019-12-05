@@ -5,7 +5,7 @@ const { mkdirp, writeJSON, readJSON, readDirectoryJSON, updateJSON, deleteFile }
 
 
 
-
+//instead of a specific string in the path part of the test, toHaveBeenLastCalledWith(expect.any(String), {key:value})
 
 // jest.mock('fs', () => ({
 //   promises: {
