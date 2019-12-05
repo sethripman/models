@@ -1,80 +1,92 @@
-const Validator = require('../lib/Validator');
+const fs = require('fs').promises;
+const { mkdirp, writeJSON, readJSON, readDirectoryJSON, updateJSON, deleteFile } = require('../lib/FileSystem');
 
-describe('Validator', () => {
-  let validator;
 
-  describe('required fields', () => {
-    beforeAll(() => {
-      validator = new Validator('age', {
-        type: Number,
-        required: true
-      });
-    });
 
-    it('returns the field', () => {
-      const dog = {
-        name: 'spot',
-        age: 5,
-        weight: '20 lbs'
-      };
 
-      expect(validator.validate(dog)).toEqual(5);
-    });
 
-    it('returns the field cast to type', () => {
-      const dog = {
-        name: 'spot',
-        age: '5',
-        weight: '20 lbs'
-      };
 
-      expect(validator.validate(dog)).toEqual(5);
-    });
 
-    it('returns the field', () => {
-      const dog = {
-        name: 'spot',
-        weight: '20 lbs'
-      };
+// jest.mock('fs', () => ({
+//   promises: {
+//     mkdir: jest.fn(() => Promise.resolve('my directory')),
+//     writeFile: jest.fn(() => Promise.resolve()),
+//     readFile: jest.fn(() => Promise.resolve(JSON.stringify({ name: 'dog' }))),
+//     readdir: jest.fn(() => Promise.resolve([
+//       './name',
+//       './secondname'
+//     ])),
+//     unlink: jest.fn(() => Promise.resolve()),
+//   }
+// }));
 
-      expect(() => validator.validate(dog)).toThrowErrorMatchingSnapshot();
-    });
-  });
+// describe('FileSystem functions', () => {
 
-  describe('optional fields', () => {
-    beforeAll(() => {
-      validator = new Validator('age', {
-        type: Number
-      });
-    });
+//   describe('mkdirp function', () => {
 
-    it('returns the field', () => {
-      const dog = {
-        name: 'spot',
-        age: 5,
-        weight: '20 lbs'
-      };
+//     it('makes a directory and all parent directories', () => {
+//       return mkdirp('my/cool/path/name')
+//         .then(() => {
+//           expect(fs.mkdir).toHaveBeenLastCalledWith('my/cool/path/name', { recursive: true });
+//         });
+//     });  
+//   });
 
-      expect(validator.validate(dog)).toEqual(5);
-    });
+//   describe('writeJSON function', () => {
 
-    it('returns the field cast to type', () => {
-      const dog = {
-        name: 'spot',
-        age: '5',
-        weight: '20 lbs'
-      };
+//     it('writes into a file as JSON', () => {
+//       return writeJSON('my/cool/path/name', { name: 'test' })
+//         .then(() => {
+//           expect(fs.writeFile).toHaveBeenLastCalledWith('my/cool/path/name', 
+//             '{"name":"test"}');
+//         });
+//     });
+//   });
 
-      expect(validator.validate(dog)).toEqual(5);
-    });
+//   describe('readJSON function', () => {
 
-    it('returns the field', () => {
-      const dog = {
-        name: 'spot',
-        weight: '20 lbs'
-      };
+//     it('reads a JSON object from a file', () => {
+//       return readJSON('my/cool/path/name')
+//         .then(dog => {
+//           expect(fs.readFile).toHaveBeenLastCalledWith('my/cool/path/name', 'utf8');
+//           expect(dog).toEqual({ name: 'dog' });
+//         });
+//     });
+//   });
 
-      expect(validator.validate(dog)).toBeNull();
-    });
-  });
-});
+//   describe('readDirectoryJSON function', () => {
+
+//     it('reads JSON objects from all files in a directory', () => {
+//       return readDirectoryJSON('my/cool/path/name')
+//         .then(allDogs => {
+//           expect(fs.readdir).toHaveBeenLastCalledWith('my/cool/path/name');
+//           expect(allDogs).toEqual([
+//             { name: 'dog' },
+//             { name: 'dog' }
+//           ]);
+//         });
+//     });
+//   });
+
+//   describe('updateJSON function', () => {
+
+//     it('updates a file with the provided object', () => {
+//       return updateJSON('my/cool/path/name', { age: 6 })
+//         .then(updatedDog => {
+//           expect(fs.readFile).toHaveBeenLastCalledWith('my/cool/path/name', 'utf8');
+//           expect(updatedDog).toEqual({ name: 'dog', age: 6 });
+//         });
+//     });
+//   });
+
+//   describe('deleteFile function', () => {
+
+//     it('deletes a file', () => {
+//       return deleteFile('my/cool/path/name')
+//         .then(() => {
+//           expect(fs.unlink).toHaveBeenLastCalledWith('my/cool/path/name');
+//         });
+//     });
+//   });
+
+// });
