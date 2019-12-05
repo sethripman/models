@@ -1,5 +1,5 @@
 const fs = require('fs').promises;
-const { mkdirp, writeJSON, readJSON, readDirectoryJSON, updateJSON } = require('../lib/FileSystem');
+const { mkdirp, writeJSON, readJSON, readDirectoryJSON, updateJSON, deleteFile } = require('../lib/FileSystem');
 
 jest.mock('fs', () => ({
   promises: {
@@ -10,6 +10,7 @@ jest.mock('fs', () => ({
       './name',
       './secondname'
     ])),
+    unlink: jest.fn(() => Promise.resolve()),
   }
 }));
 
@@ -68,6 +69,16 @@ describe('FileSystem functions', () => {
         .then(updatedDog => {
           expect(fs.readFile).toHaveBeenLastCalledWith('my/cool/path/name', 'utf8');
           expect(updatedDog).toEqual({ name: 'dog', age: 6 });
+        });
+    });
+  });
+
+  describe('deleteFile function', () => {
+
+    it('deletes a file', () => {
+      return deleteFile('my/cool/path/name')
+        .then(() => {
+          expect(fs.unlink).toHaveBeenLastCalledWith('my/cool/path/name');
         });
     });
   });
